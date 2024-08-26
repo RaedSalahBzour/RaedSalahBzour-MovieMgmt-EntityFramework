@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MovieManagement.Data;
 
@@ -10,9 +11,11 @@ using MovieManagement.Data;
 namespace MovieManagement.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240826204759_update6")]
+    partial class update6
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -35,13 +38,6 @@ namespace MovieManagement.Migrations
                     b.HasKey("GenreId");
 
                     b.ToTable("Genre");
-
-                    b.HasData(
-                        new
-                        {
-                            GenreId = 1,
-                            Name = "Drama"
-                        });
                 });
 
             modelBuilder.Entity("MovieManagement.Modles.Movie", b =>
@@ -51,10 +47,6 @@ namespace MovieManagement.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("AgeRating")
-                        .IsRequired()
-                        .HasColumnType("varchar(32)");
 
                     b.Property<int>("GenreId")
                         .HasColumnType("int");
@@ -76,17 +68,6 @@ namespace MovieManagement.Migrations
                     b.HasIndex("GenreId");
 
                     b.ToTable("Movies");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            AgeRating = "Adolescent",
-                            GenreId = 1,
-                            ReleaseDate = "20240912",
-                            Synopsis = "First Works OFC",
-                            Title = "First"
-                        });
                 });
 
             modelBuilder.Entity("MovieManagement.Modles.Movie", b =>

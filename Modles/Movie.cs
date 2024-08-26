@@ -6,6 +6,7 @@
         public string? Title { get; set; }
         public DateTime ReleaseDate { get; set; }
         public string? Synopsis { get; set; }
+        public AgeRating AgeRating { get; set; }
         public Genre Genre { get; set; }
         public int GenreId { get; set; }
     }

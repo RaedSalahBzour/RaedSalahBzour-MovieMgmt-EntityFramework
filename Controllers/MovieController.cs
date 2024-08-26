@@ -41,7 +41,7 @@ namespace MovieManagement.Controllers
             return Ok(movie);
         }
         [HttpGet("by-year/{year:int}")]
-        [ProducesResponseType(typeof(List<Movie>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(List<MovieTitle>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetByYear([FromRoute] int year)
         {
             var filteredMovies = await (context.Movies.Where(movie => movie.ReleaseDate.Year == year)
@@ -49,6 +49,14 @@ namespace MovieManagement.Controllers
 
             return Ok( filteredMovies);
            
+        }
+        [HttpGet("until-age/{ageRating}")]
+        [ProducesResponseType(typeof(List<MovieTitle>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetByAge([FromRoute]AgeRating ageRating)
+        {
+           var filteredMovies= await context.Movies.Where(m => m.AgeRating <= ageRating).Select(m => new MovieTitle { Id = m.Id, Title = m.Title }).ToListAsync();
+            return Ok(filteredMovies);
         }
         // POST api/<MovieController>
         [HttpPost]

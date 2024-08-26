@@ -134,3 +134,4 @@ C:\Users\BisanCo\Desktop\.NET\MovieManagement\MovieManagement\MovieManagement\ob
 C:\Users\BisanCo\Desktop\.NET\MovieManagement\MovieManagement\MovieManagement\obj\Debug\net8.0\MovieManagement.pdb
 C:\Users\BisanCo\Desktop\.NET\MovieManagement\MovieManagement\MovieManagement\obj\Debug\net8.0\MovieManagement.genruntimeconfig.cache
 C:\Users\BisanCo\Desktop\.NET\MovieManagement\MovieManagement\MovieManagement\obj\Debug\net8.0\ref\MovieManagement.dll
+C:\Users\BisanCo\Desktop\.NET\MovieManagement\MovieManagement\MovieManagement\obj\Debug\net8.0\MovieManagement.sourcelink.json
