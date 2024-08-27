@@ -10,7 +10,9 @@ namespace MovieManagement.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Movie> builder)
         {
-            builder.HasKey(movie => movie.Id);
+            builder.HasQueryFilter(m=>m.ReleaseDate>=new DateTime(2000,1,1))
+                .HasKey(movie => movie.Id);
+
             builder.Property(movie => movie.Title)
                    .HasMaxLength(50).HasColumnType("varchar")
                    .IsRequired();
@@ -27,15 +29,13 @@ namespace MovieManagement.Data.Configurations
                    .WithMany(g => g.Movies)
                    .HasForeignKey(m => m.GenreId);
 
-            builder.HasData(new Movie
-            {
-                Id = 1,
-                Title = "First",
-                ReleaseDate = new DateTime(2024,9,12),
-                Synopsis = "First Works OFC",
-                GenreId = 1,
-                AgeRating=AgeRating.Adolescent,
-            });
+            builder.OwnsOne(movie => movie.Director)
+                   .ToTable("Movie_Directors");
+
+            builder.OwnsMany(movie => movie.Actors)
+                   .ToTable("Movie_Actors");
+
+
         }
     }
 

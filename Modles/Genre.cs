@@ -6,6 +6,7 @@ namespace MovieManagement.Modles
     {
         public int GenreId { get; set; }
         public String? Name { get; set; }=string.Empty;
+     
         [JsonIgnore]
         public ICollection<Movie> Movies { get; set; } = new HashSet<Movie>();
     }

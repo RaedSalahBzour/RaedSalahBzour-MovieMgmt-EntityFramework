@@ -8,6 +8,7 @@ namespace MovieManagement.Data
     {
     
         public DbSet<Movie> Movies { get; set; }
+        public DbSet<Genre> Genres { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer("server=.;database=MovieDB;Integrated Security=True;TrustServerCertificate=True;");

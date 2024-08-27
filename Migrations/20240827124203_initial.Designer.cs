@@ -12,8 +12,8 @@ using MovieManagement.Data;
 namespace MovieManagement.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20240826201225_update")]
-    partial class update
+    [Migration("20240827124203_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,19 +33,16 @@ namespace MovieManagement.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("GenreId"));
 
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("CreatedAt");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("GenreId");
 
-                    b.ToTable("Genre");
-
-                    b.HasData(
-                        new
-                        {
-                            GenreId = 1,
-                            Name = "Drama"
-                        });
+                    b.ToTable("Genres");
                 });
 
             modelBuilder.Entity("MovieManagement.Modles.Movie", b =>
@@ -56,11 +53,16 @@ namespace MovieManagement.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("AgeRating")
+                        .IsRequired()
+                        .HasColumnType("varchar(32)");
+
                     b.Property<int>("GenreId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("ReleaseDate")
-                        .HasColumnType("date");
+                    b.Property<string>("ReleaseDate")
+                        .IsRequired()
+                        .HasColumnType("char(8)");
 
                     b.Property<string>("Synopsis")
                         .HasColumnType("varchar(max)");
@@ -75,16 +77,6 @@ namespace MovieManagement.Migrations
                     b.HasIndex("GenreId");
 
                     b.ToTable("Movies");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            GenreId = 1,
-                            ReleaseDate = new DateTime(2024, 8, 26, 23, 12, 24, 683, DateTimeKind.Local).AddTicks(5079),
-                            Synopsis = "First Works OFC",
-                            Title = "First"
-                        });
                 });
 
             modelBuilder.Entity("MovieManagement.Modles.Movie", b =>
@@ -93,6 +85,55 @@ namespace MovieManagement.Migrations
                         .WithMany("Movies")
                         .HasForeignKey("GenreId")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.OwnsMany("MovieManagement.Modles.Person", "Actors", b1 =>
+                        {
+                            b1.Property<int>("MovieId")
+                                .HasColumnType("int");
+
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("int");
+
+                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<int>("Id"));
+
+                            b1.Property<string>("FName")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("LName")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("MovieId", "Id");
+
+                            b1.ToTable("Movie_Actors", (string)null);
+
+                            b1.WithOwner()
+                                .HasForeignKey("MovieId");
+                        });
+
+                    b.OwnsOne("MovieManagement.Modles.Person", "Director", b1 =>
+                        {
+                            b1.Property<int>("MovieId")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("FName")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("LName")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("MovieId");
+
+                            b1.ToTable("Movie_Directors", (string)null);
+
+                            b1.WithOwner()
+                                .HasForeignKey("MovieId");
+                        });
+
+                    b.Navigation("Actors");
+
+                    b.Navigation("Director")
                         .IsRequired();
 
                     b.Navigation("Genre");

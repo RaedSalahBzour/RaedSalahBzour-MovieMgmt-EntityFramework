@@ -55,7 +55,10 @@ namespace MovieManagement.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetByAge([FromRoute]AgeRating ageRating)
         {
-           var filteredMovies= await context.Movies.Where(m => m.AgeRating <= ageRating).Select(m => new MovieTitle { Id = m.Id, Title = m.Title }).ToListAsync();
+
+           var filteredMovies= await context.Movies.Where(m => m.AgeRating <= ageRating)
+                                                   .Select(m => new MovieTitle { Id = m.Id, Title = m.Title })
+                                                   .ToListAsync();
             return Ok(filteredMovies);
         }
         // POST api/<MovieController>
@@ -75,7 +78,8 @@ namespace MovieManagement.Controllers
         public async Task<IActionResult> Put([FromRoute]int id, [FromBody] Movie movie)
         {
             var existingMovie = await context.Movies.FindAsync(id);
-            if (existingMovie == null) { return NotFound(); }
+            if (existingMovie == null) 
+            { return NotFound(); }
             existingMovie.Title= movie.Title;
             existingMovie.ReleaseDate=movie.ReleaseDate;
             existingMovie.Synopsis= movie.Synopsis;
@@ -90,7 +94,8 @@ namespace MovieManagement.Controllers
         public async Task<IActionResult> Delete([FromRoute]int id)
         {
             var movie=await context.Movies.FindAsync(id);
-            if (movie == null) { return NotFound(); }
+            if (movie == null)
+            { return NotFound(); }
             context.Movies.Remove(movie);
             await context.SaveChangesAsync();
             return Ok();

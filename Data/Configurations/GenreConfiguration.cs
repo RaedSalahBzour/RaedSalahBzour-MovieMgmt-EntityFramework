@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using MovieManagement.Data.ValueGenerators;
 using MovieManagement.Modles;
 
 namespace MovieManagement.Data.Configurations
@@ -8,7 +9,10 @@ namespace MovieManagement.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Genre> builder)
         {
-            builder.HasData(new Genre { GenreId = 1, Name = "Drama" });
+            builder.Property<DateTime>("CreatedDate")
+                   .HasColumnName("CreatedAt")
+                   .HasValueGenerator<CreatedDAteTimeGenerator>();
+
         }
     }
 }
