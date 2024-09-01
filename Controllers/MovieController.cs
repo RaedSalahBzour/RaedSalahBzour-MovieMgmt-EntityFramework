@@ -22,18 +22,18 @@ namespace MovieManagement.Controllers
         [ProducesResponseType(typeof(List<Movie>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAll()
         {
-            return Ok(await context.Movies.Include(m=>m.Genre).ToListAsync());
+            return Ok(await context.Movies.Include(m => m.Genre).ToListAsync());
         }
 
         // GET api/<MovieController>/5
         [HttpGet("{id:int}")]
         [ProducesResponseType(typeof(Movie), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Get([FromRoute]int id)
+        public async Task<IActionResult> Get([FromRoute] int id)
         {
             var movie = await context.Movies
-                .Include(m=>m.Genre)
-                .SingleOrDefaultAsync(m=>m.Id==id);
+                .Include(m => m.Genre)
+                .SingleOrDefaultAsync(m => m.Id == id);
             if (movie == null)
             {
                 return NotFound();
@@ -45,20 +45,22 @@ namespace MovieManagement.Controllers
         public async Task<IActionResult> GetByYear([FromRoute] int year)
         {
             var filteredMovies = await (context.Movies.Where(movie => movie.ReleaseDate.Year == year)
-                                                .Select(movie=>new MovieTitle { Id=movie.Id ,Title=movie.Title})).ToListAsync();
+                                                .Select(movie => new MovieTitle { Id = movie.Id, Title = movie.Title })).ToListAsync();
 
-            return Ok( filteredMovies);
-           
+            return Ok(filteredMovies);
+
         }
+        public static readonly Func<AppDBContext, AgeRating, IEnumerable<MovieTitle>> CompiledQuery =
+            EF.CompileQuery((AppDBContext _context, AgeRating ageRating) =>
+            _context.Movies.Where(m => m.AgeRating <= ageRating)
+                                                   .Select(m => new MovieTitle { Id = m.Id, Title = m.Title }));
         [HttpGet("until-age/{ageRating}")]
         [ProducesResponseType(typeof(List<MovieTitle>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetByAge([FromRoute]AgeRating ageRating)
+        public async Task<IActionResult> GetByAge([FromRoute] AgeRating ageRating)
         {
 
-           var filteredMovies= await context.Movies.Where(m => m.AgeRating <= ageRating)
-                                                   .Select(m => new MovieTitle { Id = m.Id, Title = m.Title })
-                                                   .ToListAsync();
+            var filteredMovies = CompiledQuery(context, ageRating).ToList();
             return Ok(filteredMovies);
         }
         // POST api/<MovieController>
@@ -67,22 +69,22 @@ namespace MovieManagement.Controllers
         public async Task<IActionResult> Post([FromBody] Movie movie)
         {
             await context.Movies.AddAsync(movie);
-            await context.SaveChangesAsync();   
-            return CreatedAtAction(nameof(Get), new {id=movie.Id},movie);
+            await context.SaveChangesAsync();
+            return CreatedAtAction(nameof(Get), new { id = movie.Id }, movie);
         }
 
         // PUT api/<MovieController>/5
         [HttpPut("{id}")]
         [ProducesResponseType(typeof(Movie), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Put([FromRoute]int id, [FromBody] Movie movie)
+        public async Task<IActionResult> Put([FromRoute] int id, [FromBody] Movie movie)
         {
             var existingMovie = await context.Movies.FindAsync(id);
-            if (existingMovie == null) 
+            if (existingMovie == null)
             { return NotFound(); }
-            existingMovie.Title= movie.Title;
-            existingMovie.ReleaseDate=movie.ReleaseDate;
-            existingMovie.Synopsis= movie.Synopsis;
+            existingMovie.Title = movie.Title;
+            existingMovie.ReleaseDate = movie.ReleaseDate;
+            existingMovie.Synopsis = movie.Synopsis;
             await context.SaveChangesAsync();
             return Ok(existingMovie);
         }
@@ -91,9 +93,9 @@ namespace MovieManagement.Controllers
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Delete([FromRoute]int id)
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            var movie=await context.Movies.FindAsync(id);
+            var movie = await context.Movies.FindAsync(id);
             if (movie == null)
             { return NotFound(); }
             context.Movies.Remove(movie);

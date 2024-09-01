@@ -12,8 +12,8 @@ using MovieManagement.Data;
 namespace MovieManagement.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20240827124203_initial")]
-    partial class initial
+    [Migration("20240829133247_WantedToRemoveLastMigration")]
+    partial class WantedToRemoveLastMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -106,7 +106,7 @@ namespace MovieManagement.Migrations
 
                             b1.HasKey("MovieId", "Id");
 
-                            b1.ToTable("Movie_Actors", (string)null);
+                            b1.ToTable("movie_actors", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("MovieId");
@@ -125,7 +125,7 @@ namespace MovieManagement.Migrations
 
                             b1.HasKey("MovieId");
 
-                            b1.ToTable("Movie_Directors", (string)null);
+                            b1.ToTable("movie_directors", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("MovieId");
